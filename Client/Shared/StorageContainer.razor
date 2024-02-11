@@ -1,0 +1,29 @@
+﻿@using TestSite.Shared;
+<div class="storage-container">
+    <CascadingValue Value="this">
+        @ChildContent
+    </CascadingValue>
+</div>
+
+@code {
+    [Parameter] public RenderFragment ChildContent { get; set; }
+    [Parameter] public List<StorageLocation> Storages { get; set; }
+    [Parameter] public EventCallback<StorageLocation> OnStatusUpdated { get; set; }
+
+
+    public StorageLocation storageLocation { get; set; }
+
+    public async Task UpdateStorageAsync(StorageType storageType)
+    {
+        var task = Storages.SingleOrDefault(x => x.Name == storageLocation.Name);
+
+
+        if (task != null)
+        {
+            task.StorageType = storageType;
+
+            await OnStatusUpdated.InvokeAsync(storageLocation);
+        }
+    }
+
+}

@@ -1,0 +1,48 @@
+﻿@using TestSite.Shared;
+<div class="storage-status">
+    <ul class="dropzone @dropClass"
+        ondragover="event.preventDefault();"
+        ondragstart="event.dataTransfer.setData('', event.target.id);"
+    @ondrop="HandleDrop"
+    @ondragenter="HandleDragEnter"
+    @ondragleave="HandleDragLeave">
+        @foreach (var storage in storageLocations)
+        {
+            <Storage StorageModel="storage"/>
+            
+        }
+    </ul>
+</div>
+@code {
+    [CascadingParameter] StorageContainer StorageContainer { get; set; }
+    [Parameter] public StorageType StorageType { get; set; }
+
+    List<StorageLocation> storageLocations = new List<StorageLocation>();
+    string dropClass = "";
+
+
+    protected override void OnParametersSet()
+    {
+        storageLocations.Clear();
+        storageLocations.AddRange(StorageContainer.Storages.Where(x => x.StorageType == StorageType));
+    }
+
+    private void HandleDragLeave()
+    {
+        dropClass = "";
+    }
+
+    private async Task HandleDrop()
+    {
+        dropClass = "";
+        await StorageContainer.UpdateStorageAsync(StorageType);
+
+    }
+
+    private void HandleDragEnter()
+    {
+        if (StorageType == StorageContainer.storageLocation.StorageType) return;
+
+        dropClass = "can-drop visible";
+    }
+}

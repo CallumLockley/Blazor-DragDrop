@@ -1,0 +1,34 @@
+﻿@page "/dragpage"
+@using TestSite.Shared;
+
+<h3>DragPage</h3>
+<hr />
+
+
+<StorageContainer Storages="Storages" OnStatusUpdated="HandleStatusUpdated">
+    <StorageList StorageType="StorageType.Location"/>
+    <StorageList StorageType="StorageType.None"/>
+    <StorageList StorageType="StorageType.Replen"/>
+</StorageContainer>
+
+<hr />
+<p>Last updated job was: <strong>@lastUpdatedJob</strong></p>
+<hr />
+
+
+@code {
+    List<StorageLocation> Storages = new();
+    string lastUpdatedJob = "";
+
+    protected override void OnInitialized()
+    {
+        Storages.Add(new StorageLocation { Name = "1", Description = "Test", StorageType = StorageType.Location });
+        Storages.Add(new StorageLocation { Name = "2", Description = "Test", StorageType = StorageType.Location });
+        Storages.Add(new StorageLocation { Name = "3", Description = "Test", StorageType = StorageType.Replen });
+    }
+    void HandleStatusUpdated(StorageLocation updatedJob)
+    {
+        lastUpdatedJob = updatedJob.Description;
+    }
+
+}

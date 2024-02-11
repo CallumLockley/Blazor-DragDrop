@@ -1,0 +1,15 @@
+﻿@using TestSite.Shared;
+<li class="draggable" draggable="true" title="@StorageModel.Name" @ondragstart="@(() => HandleDragStart(StorageModel))">
+    <p class="description">@StorageModel.Name</p>
+    <p class="description">@StorageModel.Description</p>
+</li>
+
+@code {
+    [CascadingParameter] StorageContainer Container { get; set; }
+    [Parameter] public StorageLocation StorageModel { get; set; }
+
+    private void HandleDragStart(StorageLocation selectedJob)
+    {
+        Container.storageLocation = selectedJob;
+    }
+}
